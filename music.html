@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Fav Music 🎵</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:20px;
+
+    background:
+    radial-gradient(circle at top left,#ffe4ef 0%,transparent 40%),
+    radial-gradient(circle at bottom right,#ffd6e8 0%,transparent 40%),
+    linear-gradient(135deg,#fff5f9,#ffeaf3);
+
+    color:#555;
+
+    transition:
+    background 1.2s ease,
+    background-color 1.2s ease;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    padding-bottom:110px; /* biar konten ga ketutup musicbar fixed */
+}
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px 20px;
+    margin-bottom:30px;
+
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(15px);
+
+    border-radius:20px;
+}
+
+.logo{
+    font-weight:700;
+    color:#ff6b9f;
+}
+
+.nav-links{
+    display:flex;
+    gap:20px;
+    list-style:none;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#666;
+}
+
+.nav-links a:hover{
+    color:#ff6b9f;
+}
+
+.hero-card{
+    background:rgba(255,255,255,.65);
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.35);
+
+    border-radius:20px;
+
+    padding:18px 20px;
+    margin-bottom:20px;
+
+    box-shadow:0 8px 20px rgba(255,105,180,.12);
+
+    max-width:500px;
+    margin-left:auto;
+    margin-right:auto;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:0;
+}
+
+.hero h1{
+    color:#ff6b9f;
+    margin-bottom:4px;
+    font-size:1.5rem;
+}
+
+.hero p{
+    color:#777;
+    font-size:13px;
+    line-height:1.5;
+}
+.hero-card{
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-card::before{
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    top:-80px;
+    right:-80px;
+
+    border-radius:50%;
+
+    background:rgba(255,182,193,.25);
+
+    filter:blur(50px);
+}
+
+.hero-card::after{
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    bottom:-70px;
+    left:-70px;
+
+    border-radius:50%;
+
+    background:rgba(173,216,230,.25);
+
+    filter:blur(50px);
+}
+@media(max-width:768px){
+
+    .hero-card{
+        padding:14px 16px;
+        border-radius:18px;
+    }
+
+    .hero h1{
+        font-size:1.25rem;
+    }
+
+    .hero p{
+        font-size:12px;
+    }
+
+}
+
+.music-section{
+    margin-top:20px;
+}
+
+.song-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    background:rgba(255,255,255,.85);
+    padding:12px;
+    border-radius:15px;
+
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.song-item:hover{
+    transform:scale(1.02);
+}
+
+.song-item img{
+    width:55px;
+    height:55px;
+    border-radius:12px;
+    object-fit:cover;
+}
+
+.song-item b{
+    color:#ff6b9f;
+}
+
+/* ===== PLAYER BAR ===== */
+#musicBar{
+    position:fixed;
+    bottom:15px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:94%;
+    max-width:520px;
+
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(15px);
+
+    border-radius:20px;
+    padding:10px 14px;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    box-shadow:0 10px 30px rgba(255,105,180,.2);
+}
+
+/* baris atas: info lagu + tombol kontrol */
+.bar-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.music-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    flex:1 1 auto;
+    min-width:0; /* WAJIB biar child boleh menyusut & ga dorong tombol keluar */
+    overflow:hidden;
+}
+
+.music-info img{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    flex-shrink:0;
+}
+
+/* TITLE MARQUEE WRAPPER */
+.title-wrap{
+    max-width:130px;
+    min-width:0;
+    flex:1 1 auto;
+    overflow:hidden;
+    position:relative;
+}
+
+.scroll-text{
+    display:block;
+    overflow:hidden;
+}
+
+.marquee-track{
+    display:inline-flex;
+    white-space:nowrap;
+    will-change:transform;
+}
+
+.marquee-item{
+    padding-right:35px;
+}
+
+/* MARQUEE ANIMATION (geser separuh, item ke-2 jadi sambungan mulus) */
+@keyframes marquee{
+    0%{ transform:translateX(0%); }
+    100%{ transform:translateX(-50%); }
+}
+
+.scroll-text.scroll .marquee-track{
+    animation:marquee linear infinite;
+}
+
+.scroll-text.paused .marquee-track{
+    animation-play-state:paused;
+}
+
+#musicArtist{
+    max-width:120px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    flex-shrink:0;
+    color:#999;
+    font-size:12px;
+}
+
+/* tombol kontrol: flex-shrink:0 supaya TIDAK PERNAH kepotong/offside */
+.controls{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+}
+
+.controls button{
+    background:#ff6b9f;
+    border:none;
+    color:white;
+    padding:6px 10px;
+    border-radius:10px;
+    cursor:pointer;
+    flex-shrink:0;
+    font-size:14px;
+}
+
+/* baris bawah: waktu + seekbar, full width jadi lega */
+.bar-bottom{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.time-text{
+    font-size:11px;
+    color:#888;
+    flex-shrink:0;
+    min-width:30px;
+}
+
+#duration{
+    text-align:right;
+}
+
+#seekBar{
+    flex:1;
+    height:4px;
+    accent-color:#ff6b9f;
+    cursor:pointer;
+    min-width:0;
+}
+.song-item{
+    border:1px solid rgba(255,255,255,.3);
+}
+
+.song-item:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+@media(max-width:768px){
+
+    .navbar{
+        justify-content:center;
+        padding:12px;
+    }
+
+    .logo{
+        display:none;
+    }
+
+    .nav-links{
+        width:100%;
+        justify-content:center;
+        gap:12px;
+    }
+
+    .nav-links a{
+        font-size:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        width:42px;
+        height:42px;
+
+        border-radius:12px;
+        background:rgba(107, 104, 104, 0.1);
+
+        transition:.25s;
+    }
+
+    .nav-links a:hover{
+        transform:translateY(-2px);
+    }
+
+    .nav-links li:nth-child(1) a::before{
+        content:"🎂";
+        font-size:18px;
+    }
+
+    .nav-links li:nth-child(2) a::before{
+        content:"💕";
+        font-size:18px;
+    }
+
+    .nav-links li:nth-child(3) a::before{
+        content:"📸";
+        font-size:18px;
+    }
+
+    .nav-links li:nth-child(4) a::before{
+        content:"🎵";
+        font-size:18px;
+    }
+    .nav-links a.active{
+    background:#b690da;
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(129, 129, 129, 0.3);
+}
+
+.nav-links a.active::before{
+    filter:brightness(1);
+}
+}
+
+/* di hp kecil, kasih ruang lebih buat tombol */
+@media(max-width:420px){
+    .title-wrap{ max-width:90px; }
+    #musicArtist{ max-width:46px; }
+    .controls button{ padding:5px 8px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<nav class="navbar">
+    <div class="logo">🎵</div>
+
+    <ul class="nav-links">
+    <li><a href="index.html">🎂</a></li>
+    <li><a href="anniversary.html">💕</a></li>
+    <li><a href="memories.html">📸</a></li>
+    <li><a href="music.html" class="active">🎵</a></li>
+</ul>
+</nav>
+
+<div class="hero-card">
+    <div class="hero">
+        <h1> Fav Songs 🎵</h1>
+        <p>Lagu-lagu yang punya cerita dan bermakna bagi kamu ❤️</p>
+    </div>
+</div>
+
+<div id="playlist" class="music-section"></div>
+
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<!-- PLAYER BAR -->
+<div id="musicBar">
+
+    <div class="bar-top">
+
+        <div class="music-info">
+           <img id="musicCover" src="bg-mc/cover4.jpg">
+
+            <div class="title-wrap">
+                <div id="musicTitle" class="scroll-text">
+                    <span class="marquee-track">
+                        <span class="marquee-item" id="titleItem1">No song</span>
+                        <span class="marquee-item" id="titleItem2">No song</span>
+                    </span>
+                </div>
+            </div>
+
+            <small id="musicArtist">---</small>
+        </div>
+
+        <div class="controls">
+            <button onclick="prevSong()">⏮</button>
+            <button onclick="togglePlay()" id="playBtn">▶</button>
+            <button onclick="nextSong()">⏭</button>
+        </div>
+
+    </div>
+
+    <div class="bar-bottom">
+        <span id="currentTime" class="time-text">0:00</span>
+        <input type="range" id="seekBar" value="0" min="0" max="100">
+        <span id="duration" class="time-text">0:00</span>
+    </div>
+
+</div>
+
+<script>
+
+const songs = [
+{
+    title: "Jealous",
+    artist: "Labrinth",
+    file: "music/Labrinth - Jealous (Official Video) (320).mp3",
+    cover: "bg-mc/cover4.jpg",
+
+    bg: ["#cfd9df","#a6b1c0","#eef2f3"]
+},
+{
+    title: "On Bended Knee",
+    artist: "Boyz II Men",
+    file: "music/Boyz II Men - On Bended Knee (320).mp3",
+    cover: "bg-mc/cover5.jpg",
+
+    bg: ["#f7d9c4","#e6b8a2","#fff1e6"]
+},
+{
+    title: "Life Goes On",
+    artist: "BTS",
+    file: "music/BTS (방탄소년단) 'Life Goes On' Official MV (320).mp3",
+    cover: "bg-mc/cover6.jpg",
+
+    bg: ["#d4f1f4","#a9d6e5","#edf6f9"]
+},
+{
+    title: "Airplane pt.2",
+    artist: "BTS",
+    file: "music/BTS (防弾少年団) 'Airplane pt.2 -Japanese ver.-' Official MV (320).mp3",
+    cover: "bg-mc/cover7.jpg",
+
+    bg: ["#ffe8a1","#ffd166","#fff4d6"]
+},
+{
+    title: "Penjaga Hati",
+    artist: "Nadhif Basalamah",
+    file: "music/nadhif basalamah - penjaga hati (Official Music Video) (320).mp3",
+    cover: "bg-mc/cover8.jpg",
+
+    bg: ["#ffd6e7","#ffb3c6","#fff0f5"]
+},
+{
+    title: "Sempurna",
+    artist: "Andra and The Backbone",
+    file: "music/Andra and The Backbone - Sempurna (lyrics) (320).mp3",
+    cover: "bg-mc/cover9.jpg",
+
+    bg: ["#e8dff5","#cdb4db","#f7f2ff"]
+},
+{
+    title: "Perfect",
+    artist: "Ed Sheeran",
+    file: "music/Ed Sheeran - Perfect (320).mp3",
+    cover: "bg-mc/cover10.jpg",
+
+    bg: ["#f8e1e7","#f5c6d6","#fff5f7"]
+},
+{
+    title: "Until I Found You",
+    artist: "Stephen Sanchez",
+    file: "music/Stephen Sanchez - Until I Found You (Lyrics) (320).mp3",
+    cover: "bg-mc/cover11.jpg",
+
+    bg: ["#f9d976","#f39f86","#fff4e6"]
+}
+];
+
+const audio = document.getElementById("audioPlayer");
+const seekBar = document.getElementById("seekBar");
+
+let current = 0;
+function changeBackground(colors){
+
+    document.body.style.background = `
+        radial-gradient(circle at top left, ${colors[0]} 0%, transparent 40%),
+        radial-gradient(circle at bottom right, ${colors[1]} 0%, transparent 40%),
+        linear-gradient(135deg, ${colors[2]}, ${colors[0]})
+    `;
+}
+
+/* RENDER */
+function render(){
+    const playlist = document.getElementById("playlist");
+
+    songs.forEach((song, i) => {
+
+        const div = document.createElement("div");
+        div.className = "song-item";
+
+        div.innerHTML = `
+            <img src="${song.cover}">
+            <div>
+                <b>${song.title}</b><br>
+                <small>${song.artist}</small>
+            </div>
+        `;
+
+        div.onclick = () => loadSong(i);
+
+        playlist.appendChild(div);
+    });
+}
+
+/* SET TITLE + CEK PERLU MARQUEE ATAU TIDAK */
+function setTitle(text){
+    const titleEl   = document.getElementById("musicTitle");
+    const wrap      = document.querySelector(".title-wrap");
+    const item1     = document.getElementById("titleItem1");
+    const item2     = document.getElementById("titleItem2");
+    const track     = titleEl.querySelector(".marquee-track");
+
+    item1.innerText = text;
+    item2.innerText = text;
+
+    // reset dulu sebelum diukur ulang
+    titleEl.classList.remove("scroll");
+    track.style.animationDuration = "";
+
+    // butuh marquee kalau lebar teks > lebar wrapper yang kelihatan
+    if(item1.scrollWidth > wrap.clientWidth){
+        titleEl.classList.add("scroll");
+
+        // durasi proporsional ke panjang teks, biar kecepatan geser konsisten
+        const speed = 45; // px per detik
+        const distance = item1.scrollWidth + 35; // + padding gap
+        const duration = Math.max(distance / speed, 4);
+        track.style.animationDuration = duration + "s";
+    }
+}
+
+/* LOAD SONG */
+function loadSong(i){
+    current = i;
+
+    const song = songs[i];
+
+    audio.src = song.file;
+    audio.play();
+
+    document.getElementById("musicCover").src = song.cover;
+
+    setTitle(song.title);
+    document.getElementById("musicArtist").innerText = song.artist;
+
+    changeBackground(song.bg);
+
+    document.getElementById("musicTitle").classList.remove("paused");
+    document.getElementById("playBtn").innerText = "⏸";
+}
+
+/* PLAY / PAUSE */
+function togglePlay(){
+    const titleEl = document.getElementById("musicTitle");
+
+    if(audio.paused){
+        audio.play();
+        document.getElementById("playBtn").innerText = "⏸";
+        titleEl.classList.remove("paused");
+    } else {
+        audio.pause();
+        document.getElementById("playBtn").innerText = "▶";
+        titleEl.classList.add("paused");
+    }
+}
+
+/* NEXT */
+function nextSong(){
+    current++;
+    if(current >= songs.length) current = 0;
+    loadSong(current);
+}
+
+/* PREV */
+function prevSong(){
+    current--;
+    if(current < 0) current = songs.length - 1;
+    loadSong(current);
+}
+
+/* TIME + SEEK */
+audio.addEventListener("timeupdate", () => {
+
+    document.getElementById("currentTime").innerText = format(audio.currentTime);
+    document.getElementById("duration").innerText = format(audio.duration);
+
+    seekBar.value = (audio.currentTime / audio.duration) * 100 || 0;
+});
+
+/* SEEK DRAG */
+seekBar.addEventListener("input", () => {
+    if(!audio.duration) return;
+    audio.currentTime = (seekBar.value / 100) * audio.duration;
+});
+
+/* AUTO NEXT */
+audio.addEventListener("ended", () => {
+    nextSong();
+});
+
+/* FORMAT */
+function format(sec){
+    if(isNaN(sec)) return "0:00";
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s < 10 ? "0"+s : s}`;
+}
+
+/* re-cek marquee kalau ukuran layar berubah (misal rotate hp) */
+window.addEventListener("resize", () => {
+    const item1 = document.getElementById("titleItem1");
+    if(item1.innerText && item1.innerText !== "No song"){
+        setTitle(item1.innerText);
+    }
+});
+
+function initPlayer(){
+    const firstSong = songs[0];
+
+    current = 0;
+
+    
+    audio.src = firstSong.file;
+
+    
+    document.getElementById("musicCover").src = firstSong.cover;
+    document.getElementById("musicArtist").innerText = firstSong.artist;
+    setTitle(firstSong.title);
+    
+    changeBackground(firstSong.bg);
+
+    document.getElementById("playBtn").innerText = "▶";
+}
+
+/* INIT */
+render();
+initPlayer();
+
+</script>
+
+</body>
+</html>

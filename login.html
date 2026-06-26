@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Masuk Dulu 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px;
+    background:
+      radial-gradient(circle at 15% 15%, #ffc2d9 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, #ffb3d1 0%, transparent 45%),
+      radial-gradient(circle at 80% 15%, #ffd6e8 0%, transparent 40%),
+      linear-gradient(135deg, #fff0f7 0%, #ffe4ef 50%, #ffd6e8 100%);
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(255,150,190,0.35) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    border-radius: 50%;
+    animation: blobMove1 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(255,180,210,0.3) 0%, transparent 70%);
+    bottom: -80px; right: -80px;
+    border-radius: 50%;
+    animation: blobMove2 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 360px;
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 30px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    box-shadow:
+      0 8px 40px rgba(255, 100, 160, 0.14),
+      0 2px 10px rgba(255, 182, 210, 0.12),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.85);
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+    border-radius: 50%;
+  }
+
+  .heart-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 8px;
+    animation: floatHeart 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(255,100,160,0.3));
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #cc3070;
+    margin: 0 0 5px;
+    text-shadow: 0 1px 3px rgba(255,255,255,0.6);
+  }
+
+  .subtitle {
+    font-size: 0.78rem;
+    color: #9a6b7f;
+    margin: 0 0 22px;
+    line-height: 1.5;
+  }
+
+  .pin-dots {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    margin-bottom: 22px;
+  }
+
+  .pin-dot {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    border: 2px solid rgba(204, 48, 112, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .pin-dot.filled {
+    background: #ff6fa3;
+    border-color: #cc3070;
+    box-shadow: 0 0 10px rgba(255, 111, 163, 0.55);
+    transform: scale(1.12);
+  }
+
+  .pin-dot.error {
+    background: #ff4f87;
+    border-color: #cc0044;
+    box-shadow: 0 0 10px rgba(255, 79, 135, 0.5);
+    animation: shake 0.45s ease;
+  }
+
+  .pin-dot.success {
+    background: #3ecf82;
+    border-color: #27a062;
+    box-shadow: 0 0 12px rgba(62, 207, 130, 0.5);
+    animation: successPop 0.3s ease;
+  }
+
+  .numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .num-btn {
+    height: 58px;
+    width: 100%;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 2px 8px rgba(255, 100, 160, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #b02d65;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  .num-btn:hover {
+    background: rgba(255, 255, 255, 0.42);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+    box-shadow:
+      0 5px 15px rgba(255, 100, 160, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+
+  .num-btn:active {
+    transform: scale(0.94);
+    background: rgba(255, 159, 200, 0.25);
+    box-shadow:
+      0 1px 4px rgba(255, 100, 160, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .num-btn.del-btn {
+    font-size: 1.25rem;
+    color: #9a5575;
+  }
+
+  /* Tombol clear — ikon sapu kecil */
+  .num-btn.clear-btn {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #b06080;
+    letter-spacing: 0.3px;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .clear-btn .clear-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .submit-btn {
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ff6fa3 0%, #ff9fc2 100%);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    box-shadow:
+      0 5px 18px rgba(255, 111, 163, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 24px rgba(255, 111, 163, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .submit-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 3px 10px rgba(255, 111, 163, 0.3);
+  }
+
+  .error-msg {
+    display: none;
+    color: #d42060;
+    font-size: 0.76rem;
+    margin-top: 12px;
+    background: rgba(255, 80, 120, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 80, 120, 0.22);
+    border-radius: 12px;
+    padding: 9px 14px;
+    line-height: 1.6;
+  }
+
+  /* attempt counter dots */
+  .attempt-dots {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 14px;
+  }
+
+  .attempt-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(204, 48, 112, 0.15);
+    border: 1px solid rgba(204, 48, 112, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  .attempt-dot.used {
+    background: rgba(255, 79, 135, 0.5);
+    border-color: rgba(204, 48, 112, 0.5);
+  }
+
+  @keyframes floatHeart {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-9px); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-5px); }
+    40%       { transform: translateX(5px); }
+    60%       { transform: translateX(-4px); }
+    80%       { transform: translateX(4px); }
+  }
+
+  @keyframes successPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes blobMove1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%       { transform: translate(30px, 20px) scale(1.05); }
+  }
+
+  @keyframes blobMove2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%       { transform: translate(-20px, -30px) scale(1.08); }
+  }
+
+  @media (max-width: 380px) {
+    .login-card { padding: 24px 16px 22px; border-radius: 24px; }
+    h1          { font-size: 1.1rem; }
+    .heart-icon { font-size: 2.6rem; }
+    .num-btn    { height: 52px; font-size: 1.05rem; border-radius: 13px; }
+    .numpad     { gap: 8px; }
+    .submit-btn { height: 48px; font-size: 0.9rem; }
+  }
+
+  @media (max-height: 640px) {
+    .login-card { padding: 22px 20px; }
+    .heart-icon { font-size: 2.4rem; margin-bottom: 4px; }
+    .subtitle   { margin-bottom: 16px; }
+    .pin-dots   { margin-bottom: 16px; }
+    .num-btn    { height: 50px; }
+    .numpad     { gap: 8px; margin-bottom: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <span class="heart-icon">💖</span>
+  <h1>Secret Gift Page</h1>
+  <p class="subtitle">Masukkan tanggal spesial untuk buka hadiah 🎁</p>
+
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d4"></div>
+    <div class="pin-dot" id="d5"></div>
+    <div class="pin-dot" id="d6"></div>
+    <div class="pin-dot" id="d7"></div>
+  </div>
+
+  <div class="numpad">
+    <button class="num-btn" onclick="pressNum('1')">1</button>
+    <button class="num-btn" onclick="pressNum('2')">2</button>
+    <button class="num-btn" onclick="pressNum('3')">3</button>
+    <button class="num-btn" onclick="pressNum('4')">4</button>
+    <button class="num-btn" onclick="pressNum('5')">5</button>
+    <button class="num-btn" onclick="pressNum('6')">6</button>
+    <button class="num-btn" onclick="pressNum('7')">7</button>
+    <button class="num-btn" onclick="pressNum('8')">8</button>
+    <button class="num-btn" onclick="pressNum('9')">9</button>
+    <button class="num-btn clear-btn" onclick="clearAll()" aria-label="Hapus semua">
+      <span class="clear-icon">🗑️</span>
+    </button>
+    <button class="num-btn" onclick="pressNum('0')">0</button>
+    <button class="num-btn del-btn" onclick="deleteLast()" aria-label="Hapus satu">⌫</button>
+  </div>
+
+  <button class="submit-btn" onclick="checkPin()">Buka Hadiah 💝</button>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="attempt-dots" id="attemptDots">
+    <div class="attempt-dot" id="a0"></div>
+    <div class="attempt-dot" id="a1"></div>
+    <div class="attempt-dot" id="a2"></div>
+  </div>
+</div>
+
+<script>
+  const CORRECT = "24071998";
+  let current = "";
+  let locked = false;
+  let wrongAttempts = 0;
+  const MAX_ATTEMPTS = 3;
+
+  function updateDots(state) {
+    for (let i = 0; i < 8; i++) {
+      const d = document.getElementById("d" + i);
+      d.className = "pin-dot";
+      if (i < current.length) {
+        if (state === "error")        d.classList.add("error");
+        else if (state === "success") d.classList.add("success");
+        else                          d.classList.add("filled");
+      }
+    }
+  }
+
+  function updateAttemptDots() {
+    for (let i = 0; i < MAX_ATTEMPTS; i++) {
+      const a = document.getElementById("a" + i);
+      a.className = "attempt-dot" + (i < wrongAttempts ? " used" : "");
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById("errorMsg");
+    el.innerHTML = msg;
+    el.style.display = "block";
+  }
+
+  function hideError() {
+    document.getElementById("errorMsg").style.display = "none";
+  }
+
+  function pressNum(n) {
+    if (locked || current.length >= 8) return;
+    current += n;
+    updateDots("normal");
+    hideError();
+    if (current.length === 8) setTimeout(checkPin, 180);
+  }
+
+  function deleteLast() {
+    if (locked) return;
+    current = current.slice(0, -1);
+    updateDots("normal");
+    hideError();
+  }
+
+  function clearAll() {
+    if (locked) return;
+    current = "";
+    updateDots("normal");
+    hideError();
+  }
+
+  function checkPin() {
+    if (locked || !current.length) return;
+
+    if (current === CORRECT) {
+      locked = true;
+      updateDots("success");
+      setTimeout(() => {
+        localStorage.setItem("birthdayAccess", "granted");
+        window.location.href = "index.html";
+      }, 700);
+    } else {
+      wrongAttempts++;
+      updateDots("error");
+      updateAttemptDots();
+
+      if (wrongAttempts >= MAX_ATTEMPTS) {
+        showError("Password salah 🥺<br>Masa lupa sama tanggal lahir sendiri?");
+      } else {
+        const sisa = MAX_ATTEMPTS - wrongAttempts;
+        showError("Password salah 🥺 Coba lagi! (" + sisa + "x kesempatan lagi)");
+      }
+
+      locked = true;
+      setTimeout(() => {
+        current = "";
+        locked = false;
+        updateDots("normal");
+      }, 900);
+    }
+  }
+
+  // Keyboard support
+  document.addEventListener("keydown", function(e) {
+    if (e.key >= "0" && e.key <= "9") pressNum(e.key);
+    else if (e.key === "Backspace")    deleteLast();
+    else if (e.key === "Delete")       clearAll();
+    else if (e.key === "Enter")        checkPin();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday ❤️</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<!-- Floating Hearts -->
+<div class="floating-hearts">
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+</div>
+
+<!-- Birthday Popup -->
+<div id="birthdayPopup" class="popup-overlay hidden">
+    <div class="popup-glass">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+        <div class="popup-content">
+            <div class="popup-cake">🎂</div>
+            <h2>🎉 Happy Birthday, Sayangku 🎉</h2>
+            <p>
+                Hari ini, aku ingin kamu tahu betapa berharganya kamu di hidupku.
+                Setiap detik bersamamu terasa seperti hadiah yang tidak pernah aku minta,
+                tapi selalu aku syukuri. Kamu bukan hanya pasanganku — kamu adalah
+                rumahku, tempat aku selalu ingin pulang.
+            </p>
+            <p>
+                Di hari spesialmu ini, aku berharap semua kebaikan yang sudah kamu
+                berikan kepada dunia — terutama kepadaku — kembali berlipat ganda.
+                Semoga impian-impianmu satu per satu terwujud, semoga senyummu
+                tidak pernah pudar, dan semoga kamu tahu bahwa aku akan selalu ada,
+                di sisimu, dalam setiap babak hidup yang kamu jalani.
+            </p>
+            <p>
+                Terima kasih sudah hadir, sudah bertahan, dan sudah mencintai dengan
+                tulus. Selamat ulang tahun, cintaku ❤️
+            </p>
+            <button class="popup-btn" onclick="closePopup()">Terima Kasih ✨</button>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar">
+    <div class="logo">🎂</div>
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">🎂</a></li>
+        <li><a href="anniversary.html">💕</a></li>
+        <li><a href="memories.html">📸</a></li>
+        <li><a href="music.html">🎵</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+    <div class="hero">
+        <div class="cake">🎂</div>
+        <h1>Countdown Ulang Tahun</h1>
+        <h2>Untuk Kamu ❤️</h2>
+    </div>
+
+    <div id="countdown">
+        <div class="box">
+            <span id="days">00</span>
+            <small>Hari</small>
+        </div>
+        <div class="box">
+            <span id="hours">00</span>
+            <small>Jam</small>
+        </div>
+        <div class="box">
+            <span id="minutes">00</span>
+            <small>Menit</small>
+        </div>
+        <div class="box">
+            <span id="seconds">00</span>
+            <small>Detik</small>
+        </div>
+    </div>
+
+    <div id="lockedMessage" class="card">
+        🔒 Pesan spesial masih terkunci...
+    </div>
+
+    <div id="openPopupWrap" class="hidden open-popup-wrap">
+        <button class="open-popup-btn" onclick="openPopup()">
+            💌 Baca Pesan Spesial
+        </button>
+    </div>
+
+    <div id="friendsLocked" class="card">
+        <h3>🔒 5 Pesan Rahasia Menunggu...</h3>
+    </div>
+
+    <div id="unlockText" class="hidden">
+        ✨ 5 Pesan Rahasia Telah Terbuka
+    </div>
+
+    <section id="friendsSection" class="hidden">
+        <h2>💌 Pesan dari Teman</h2>
+        <p class="section-sub">Ketuk amplop untuk membaca pesannya</p>
+
+        <div class="letter-card" onclick="toggleLetter(this)">
+            <div class="letter-header">
+                <div class="letter-avatar av-a">A</div>
+                <div class="letter-meta">
+                    <p class="letter-name">Pesan dari Andi</p>
+                    <p class="letter-preview">Happy birthday yaa! Semoga semua impian...</p>
+                </div>
+                <span class="letter-chevron">▼</span>
+            </div>
+            <div class="letter-content">
+                <div class="letter-divider"></div>
+                Happy birthday yaa! Semoga semua impian kamu tercapai, selalu sehat, dan makin bersinar setiap harinya ❤️
+            </div>
+        </div>
+
+        <div class="letter-card" onclick="toggleLetter(this)">
+            <div class="letter-header">
+                <div class="letter-avatar av-s">S</div>
+                <div class="letter-meta">
+                    <p class="letter-name">Pesan dari Siti</p>
+                    <p class="letter-preview">Semoga sehat selalu dan sukses terus...</p>
+                </div>
+                <span class="letter-chevron">▼</span>
+            </div>
+            <div class="letter-content">
+                <div class="letter-divider"></div>
+                Semoga sehat selalu dan sukses terus yaa! Kamu layak mendapat yang terbaik di hari spesial ini 🎉
+            </div>
+        </div>
+
+        <div class="letter-card" onclick="toggleLetter(this)">
+            <div class="letter-header">
+                <div class="letter-avatar av-r">R</div>
+                <div class="letter-meta">
+                    <p class="letter-name">Pesan dari Rina</p>
+                    <p class="letter-preview">Terima kasih sudah jadi teman yang baik...</p>
+                </div>
+                <span class="letter-chevron">▼</span>
+            </div>
+            <div class="letter-content">
+                <div class="letter-divider"></div>
+                Terima kasih sudah jadi teman yang baik selama ini. Semoga kebaikanmu selalu kembali berlipat ganda ❤️
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
