@@ -2,7 +2,7 @@ if (localStorage.getItem("birthdayAccess") !== "granted") {
     window.location.href = "login.html";
 }
 
-const birthdayDate = new Date(Date.now() + 5000);
+const birthdayDate = new Date("2026-07-24T00:00:00");
 let unlocked = false;
 
 function launchConfetti() {
