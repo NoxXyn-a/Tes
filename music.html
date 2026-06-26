@@ -303,6 +303,8 @@ body{
 }
 
 .controls button{
+    -webkit-tap-highlight-color: transparent;
+    outline:none;
     background:#ff6b9f;
     border:none;
     color:white;
@@ -626,7 +628,9 @@ function loadSong(i){
     const song = songs[i];
 
     audio.src = song.file;
-    audio.play();
+    audio.play().then(()=>{
+        document.getElementById("playBtn").innerText="⏸";
+    }).catch(console.error);
 
     document.getElementById("musicCover").src = song.cover;
 
@@ -640,13 +644,15 @@ function loadSong(i){
 }
 
 /* PLAY / PAUSE */
-function togglePlay(){
+async function togglePlay(){
     const titleEl = document.getElementById("musicTitle");
 
     if(audio.paused){
-        audio.play();
-        document.getElementById("playBtn").innerText = "⏸";
-        titleEl.classList.remove("paused");
+        try{
+            await audio.play();
+            document.getElementById("playBtn").innerText="⏸";
+            titleEl.classList.remove("paused");
+        }catch(e){console.error(e);}
     } else {
         audio.pause();
         document.getElementById("playBtn").innerText = "▶";
