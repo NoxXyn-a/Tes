@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Memories 📸</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --pink:      #ff6b9f;
+  --pink-soft: #ffb3d1;
+  --pink-pale: #fff0f6;
+  --rose:      #f43f7e;
+  --text:      #555;
+  --text-light:#888;
+  --white:     #ffffff;
+  --glass-bg:  rgba(255,255,255,0.78);
+  --glass-border: rgba(255,255,255,0.9);
+  --shadow:    rgba(187,91,139,0.13);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left,   #ffe4ef 0%, transparent 42%),
+    radial-gradient(circle at bottom right,#ffd6e8 0%, transparent 42%),
+    linear-gradient(135deg, #fff5f9, #ffeaf3);
+  overflow-x: hidden;
+}
+
+/* ── Particle Canvas ── */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout wrapper ── */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Navbar ── */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  margin-bottom: 28px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px var(--shadow);
+}
+
+.logo { font-weight: 700; color: var(--pink); font-size: 1.1rem; }
+
+.nav-links { display: flex; gap: 20px; list-style: none; }
+.nav-links a {
+  text-decoration: none;
+  color: #666;
+  font-size: 14px;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--pink); }
+
+/* ── Hero Card ── */
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 32px 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px var(--shadow);
+  text-align: center;
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  width: 220px; height: 220px;
+  top: -100px; right: -100px;
+  border-radius: 50%;
+  background: rgba(255,182,193,.3);
+  filter: blur(60px);
+}
+
+.hero-card::after {
+  content: "";
+  position: absolute;
+  width: 180px; height: 180px;
+  bottom: -80px; left: -80px;
+  border-radius: 50%;
+  background: rgba(255,182,193,.25);
+  filter: blur(55px);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffe0ed, #ffd0e6);
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 30px;
+  margin-bottom: 12px;
+}
+
+.hero-card h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: var(--pink);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.hero-card .subtitle {
+  color: var(--text-light);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ── Opening Quote ── */
+.quote-section {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px var(--shadow);
+  text-align: center;
+  position: relative;
+}
+
+.quote-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  color: var(--pink-soft);
+  line-height: .6;
+  display: block;
+  margin-bottom: 6px;
+  user-select: none;
+}
+
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: #b05070;
+  line-height: 1.75;
+  max-width: 560px;
+  margin: 0 auto 12px;
+}
+
+.quote-author {
+  font-size: 12px;
+  color: var(--text-light);
+  letter-spacing: .06em;
+}
+
+/* ── Section Card ── */
+.section-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 32px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  color: var(--pink);
+  margin-bottom: 6px;
+}
+
+.section-sub {
+  font-size: 12.5px;
+  color: var(--text-light);
+  margin-bottom: 28px;
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 6px; bottom: 6px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--pink-soft), transparent);
+  border-radius: 2px;
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateX(-16px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.tl-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.tl-dot {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  width: 18px; height: 18px;
+  background: white;
+  border: 2.5px solid var(--pink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+
+.tl-date {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--pink);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.tl-label {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 3px;
+}
+
+.tl-desc {
+  font-size: 12.5px;
+  color: var(--text-light);
+  line-height: 1.65;
+}
+
+/* ── Masonry Gallery ── */
+.gallery-grid {
+  columns: 3;
+  column-gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .gallery-grid { columns: 2; column-gap: 10px; }
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(187,91,139,.14);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 10px 28px rgba(187,91,139,.22);
+}
+
+.gallery-item img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  transition: filter .25s;
+}
+
+.gallery-item:hover img { filter: brightness(.88); }
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(244,63,126,.55) 0%, transparent 55%);
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity .25s;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+}
+
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+
+.gallery-caption {
+  color: white;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ── Lightbox ── */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(30, 5, 18, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox.open { display: flex; }
+
+.lb-inner {
+  position: relative;
+  max-width: 780px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.lb-image-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.lb-image-wrap img {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  display: block;
+}
+
+.lb-caption {
+  color: rgba(255,255,255,.82);
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.lb-counter {
+  color: rgba(255,255,255,.45);
+  font-size: 11px;
+}
+
+.lb-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.25);
+  color: white;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+  z-index: 10;
+}
+
+.lb-btn:hover {
+  background: rgba(255,107,159,.6);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lb-prev { left: -20px; }
+.lb-next { right: -20px; }
+
+.lb-close {
+  position: absolute;
+  top: -12px; right: -12px;
+  background: rgba(255,107,159,.85);
+  color: white;
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 11;
+  transition: background .2s, transform .2s;
+  box-shadow: 0 4px 14px rgba(244,63,126,.35);
+}
+
+.lb-close:hover {
+  background: var(--rose);
+  transform: scale(1.1);
+}
+
+/* ── Closing Message ── */
+.closing-card {
+  background: linear-gradient(135deg, #fff0f7 0%, #ffe8f2 100%);
+  border: 1px solid rgba(255,180,210,.4);
+  border-radius: 24px;
+  padding: 36px 28px;
+  text-align: center;
+  box-shadow: 0 10px 30px var(--shadow);
+  margin-bottom: 24px;
+}
+
+.closing-icon {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  display: block;
+  animation: heartbeat 1.6s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.15); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.1); }
+  56% { transform: scale(1); }
+}
+
+.closing-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 3.5vw, 1.65rem);
+  color: var(--rose);
+  margin-bottom: 14px;
+}
+
+.closing-card p {
+  font-size: 13.5px;
+  color: #775;
+  line-height: 1.85;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── Music Bar ── */
+.music-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,210,225,.7);
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(187,91,139,.18);
+  min-width: 240px;
+  max-width: 90vw;
+}
+
+.music-icon {
+  font-size: 1rem;
+  animation: spin 3s linear infinite;
+  animation-play-state: paused;
+  cursor: pointer;
+}
+
+.music-icon.playing { animation-play-state: running; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.music-info { flex: 1; overflow: hidden; }
+
+.music-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--pink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-artist {
+  font-size: 10.5px;
+  color: var(--text-light);
+}
+
+.music-waves {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 18px;
+}
+
+.wave-bar {
+  width: 3px;
+  background: linear-gradient(to top, var(--pink), var(--pink-soft));
+  border-radius: 2px;
+  animation: wave 0.9s ease-in-out infinite alternate;
+}
+
+.wave-bar:nth-child(1) { height: 7px;  animation-delay: 0s; }
+.wave-bar:nth-child(2) { height: 14px; animation-delay: .15s; }
+.wave-bar:nth-child(3) { height: 10px; animation-delay: .3s; }
+.wave-bar:nth-child(4) { height: 16px; animation-delay: .45s; }
+.wave-bar:nth-child(5) { height: 8px;  animation-delay: .6s; }
+
+.music-waves.paused .wave-bar { animation-play-state: paused; }
+
+@keyframes wave {
+  from { transform: scaleY(.4); }
+  to   { transform: scaleY(1);  }
+}
+
+.play-btn {
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  border: none;
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(244,63,126,.3);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+
+.play-btn:hover { transform: scale(1.1); }
+
+/* ── Mobile navbar ── */
+@media (max-width: 768px) {
+  .navbar {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .logo { display: none; }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .nav-links a {
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: rgba(255,107,159,.1);
+    transition: .25s;
+  }
+
+  .nav-links a:hover { transform: translateY(-2px); }
+
+  .nav-links li:nth-child(1) a::before { content: "🎂"; font-size: 18px; }
+  .nav-links li:nth-child(2) a::before { content: "💕"; font-size: 18px; }
+  .nav-links li:nth-child(3) a::before { content: "📸"; font-size: 18px; }
+  .nav-links li:nth-child(4) a::before { content: "🎵"; font-size: 18px; }
+
+  .nav-links a.active {
+    background: var(--pink);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(236,43,140,.3);
+  }
+
+  .section-card { padding: 24px 18px; }
+
+  .lb-prev { left: -6px; }
+  .lb-next { right: -6px; }
+}
+
+/* ── Scroll-reveal base ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Floating hearts deco ── */
+.float-hearts {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.fheart {
+  position: absolute;
+  bottom: -40px;
+  font-size: 14px;
+  opacity: 0;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0;   transform: translateY(0) scale(.6); }
+  10%  { opacity: .55; }
+  90%  { opacity: .2; }
+  100% { opacity: 0;   transform: translateY(-100vh) scale(1) rotate(20deg); }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Particles -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Floating hearts -->
+<div class="float-hearts" id="floatHearts"></div>
+
+<div class="container">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">❤️</div>
+    <ul class="nav-links">
+      <li><a href="index.html">🎂</a></li>
+      <li><a href="memories.html" class="active">📸</a></li>
+      <li><a href="music.html">🎵</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero-card reveal">
+    <div class="hero-badge">📸 Kenangan Kita</div>
+    <h1>Our Memories</h1>
+    <p class="subtitle">Setiap foto adalah cerita, setiap momen adalah keabadian 🌸</p>
+  </div>
+
+  <!-- Opening Quote -->
+  <div class="quote-section reveal">
+    <span class="quote-mark">"</span>
+    <p class="quote-text">
+      Bukan jarak yang mendekatkan kita, bukan waktu yang menyatukan kita —
+      melainkan setiap momen kecil yang kita pilih untuk diingat bersama.
+    </p>
+    <span class="quote-author">— untuk kamu, selamanya ❤️</span>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section-card reveal">
+    <h2 class="section-title">Perjalanan Kita 🧭</h2>
+    <p class="section-sub">Milestone yang selalu akan kita kenang</p>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot">💫</div>
+        <div class="tl-date">Maret 2026</div>
+        <div class="tl-label">Awal dari segalanya</div>
+        <div class="tl-desc">Hari dimana kita memutuskan untuk memulai perjalanan ini bersama — penuh keberanian dan rasa yang tak bisa diungkapkan dengan kata-kata.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🌸</div>
+        <div class="tl-date">Pertama kali</div>
+        <div class="tl-label">Kenangan pertama kita</div>
+        <div class="tl-desc">Momen pertama yang membuat kita sadar bahwa ini bukan sekadar kebetulan — ini memang sudah direncanakan oleh semesta.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🌙</div>
+        <div class="tl-date">Setiap malam</div>
+        <div class="tl-label">Obrolan panjang tanpa ujung</div>
+        <div class="tl-desc">Dari topik serius hingga hal-hal konyol — setiap percakapan kita selalu terasa seperti rumah yang nyaman.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">🎂</div>
+        <div class="tl-date">Hari Spesial</div>
+        <div class="tl-label">Merayakan bersama</div>
+        <div class="tl-desc">Setiap perayaan terasa dua kali lebih indah karena kamu ada di sana — mengisi setiap sudutnya dengan tawa dan kehangatan.</div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot">✨</div>
+        <div class="tl-date">Hari ini & seterusnya</div>
+        <div class="tl-label">Masih terus berlanjut…</div>
+        <div class="tl-desc">Cerita kita belum selesai. Masih banyak halaman yang menunggu untuk ditulis bersama — dan aku tidak sabar untuk setiap babnya.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="section-card reveal">
+    <h2 class="section-title">Gallery Kenangan 📷</h2>
+    <p class="section-sub">Klik foto untuk melihat lebih dekat</p>
+
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- Row 1 -->
+      <div class="gallery-item" data-index="0">
+        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80" alt="Kenangan 1">
+        <div class="gallery-overlay"><span class="gallery-caption">Momen bahagia bersama 💕</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="1">
+        <img src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=80" alt="Kenangan 2">
+        <div class="gallery-overlay"><span class="gallery-caption">Kebersamaan yang hangat 🌸</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="2">
+        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80" alt="Kenangan 3">
+        <div class="gallery-overlay"><span class="gallery-caption">Saat semua terasa sempurna ✨</span></div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="gallery-item" data-index="3">
+        <img src="https://images.unsplash.com/photo-1600275669283-a4be8c71a69b?w=400&q=80" alt="Kenangan 4">
+        <div class="gallery-overlay"><span class="gallery-caption">Petualangan kecil kita 🌿</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="4">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="Kenangan 5">
+        <div class="gallery-overlay"><span class="gallery-caption">Kamu, selalu 💖</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="5">
+        <img src="https://images.unsplash.com/photo-1499678329028-101435549a4e?w=400&q=80" alt="Kenangan 6">
+        <div class="gallery-overlay"><span class="gallery-caption">Senja yang kita nikmati 🌅</span></div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="gallery-item" data-index="6">
+        <img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80" alt="Kenangan 7">
+        <div class="gallery-overlay"><span class="gallery-caption">Tawa yang tidak bisa disembunyikan 😄</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="7">
+        <img src="https://images.unsplash.com/photo-1542628682-88321d2a4828?w=400&q=80" alt="Kenangan 8">
+        <div class="gallery-overlay"><span class="gallery-caption">Ketenangan bersamamu 🕊️</span></div>
+      </div>
+
+      <div class="gallery-item" data-index="8">
+        <img src="https://images.unsplash.com/photo-1515037893149-de7f840978e2?w=400&q=80" alt="Kenangan 9">
+        <div class="gallery-overlay"><span class="gallery-caption">Romantis, selalu 🌹</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="closing-card reveal">
+    <span class="closing-icon">💗</span>
+    <h2>Setiap Momen Bersamamu Adalah Hadiah</h2>
+    <p>
+      Terima kasih sudah mewarnai hari-hariku dengan kasih sayang yang tulus.
+      Foto-foto ini hanyalah secuil bukti dari kebahagiaan yang kita ciptakan bersama.
+      Masih banyak momen indah yang menunggu untuk kita abadikan — dan aku akan selalu
+      ada di sampingmu untuk setiap satu darinya. 🌸
+    </p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lb-inner">
+    <div class="lb-image-wrap">
+      <button class="lb-close" id="lbClose" title="Tutup">✕</button>
+      <button class="lb-btn lb-prev" id="lbPrev" title="Sebelumnya">‹</button>
+      <img id="lbImg" src="" alt="">
+      <button class="lb-btn lb-next" id="lbNext" title="Berikutnya">›</button>
+    </div>
+    <p class="lb-caption" id="lbCaption"></p>
+    <p class="lb-counter" id="lbCounter"></p>
+  </div>
+</div>
+
+<!-- Music Bar -->
+<div class="music-bar">
+  <span class="music-icon" id="musicIcon">💿</span>
+  <div class="music-info">
+    <div class="music-title" id="musicTitle">Perfect — Ed Sheeran</div>
+    <div class="music-artist" id="musicArtist">For you, always ❤️</div>
+  </div>
+  <div class="music-waves" id="musicWaves">
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+  </div>
+  <button class="play-btn" id="playBtn" title="Play/Pause">▶</button>
+</div>
+
+<audio id="audioPlayer" preload="auto" loop>
+  <source src="music/Ed Sheeran - Perfect (320).mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ─── Particles ─── */
+(function(){
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, pts = [];
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+
+  for(let i=0;i<55;i++){
+    pts.push({
+      x: rand(0,window.innerWidth),
+      y: rand(0,window.innerHeight),
+      r: rand(1.5,3.5),
+      dx: rand(-0.18,0.18),
+      dy: rand(-0.18,0.18),
+      o: rand(0.1,0.38)
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,107,159,${p.o})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if(p.x<0||p.x>W) p.dx*=-1;
+      if(p.y<0||p.y>H) p.dy*=-1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── Floating Hearts ─── */
+(function(){
+  const container = document.getElementById('floatHearts');
+  const emojis = ['❤️','🌸','💕','✨','💖','🌷'];
+
+  function spawn(){
+    const el = document.createElement('span');
+    el.className = 'fheart';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100 + 'vw';
+    const dur = 8 + Math.random()*10;
+    el.style.animationDuration = dur + 's';
+    el.style.animationDelay    = Math.random()*4 + 's';
+    el.style.fontSize = (10 + Math.random()*10) + 'px';
+    container.appendChild(el);
+    setTimeout(()=>el.remove(), (dur+5)*1000);
+  }
+
+  for(let i=0;i<10;i++) setTimeout(spawn, i*600);
+  setInterval(spawn, 2200);
+})();
+
+/* ─── Scroll Reveal ─── */
+(function(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{ threshold:0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.tl-item').forEach(el=>obs.observe(el));
+})();
+
+/* ─── Lightbox ─── */
+(function(){
+  const items    = document.querySelectorAll('.gallery-item');
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lbImg');
+  const lbCap    = document.getElementById('lbCaption');
+  const lbCount  = document.getElementById('lbCounter');
+  const lbClose  = document.getElementById('lbClose');
+  const lbPrev   = document.getElementById('lbPrev');
+  const lbNext   = document.getElementById('lbNext');
+  let current    = 0;
+  const total    = items.length;
+
+  const data = Array.from(items).map(item=>({
+    src: item.querySelector('img').src,
+    alt: item.querySelector('img').alt,
+    cap: item.querySelector('.gallery-caption')?.textContent || ''
+  }));
+
+  function open(idx){
+    current = (idx + total) % total;
+    lbImg.src    = data[current].src;
+    lbImg.alt    = data[current].alt;
+    lbCap.textContent   = data[current].cap;
+    lbCount.textContent = `${current+1} / ${total}`;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  items.forEach((item,i)=> item.addEventListener('click',()=>open(i)));
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click',  ()=>open(current-1));
+  lbNext.addEventListener('click',  ()=>open(current+1));
+
+  lightbox.addEventListener('click', e=>{
+    if(e.target===lightbox) close();
+  });
+
+  document.addEventListener('keydown', e=>{
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key==='ArrowLeft')  open(current-1);
+    if(e.key==='ArrowRight') open(current+1);
+    if(e.key==='Escape')     close();
+  });
+})();
+
+/* ─── Music Bar ─── */
+(function(){
+const audio=document.getElementById('audioPlayer');
+const playBtn=document.getElementById('playBtn');
+const musicIcon=document.getElementById('musicIcon');
+const musicWaves=document.getElementById('musicWaves');
+const title=document.getElementById('musicTitle');
+const artist=document.getElementById('musicArtist');
+title.textContent='Perfect';
+artist.textContent='Ed Sheeran';
+audio.volume=0.5;
+function sync(){
+ const p=!audio.paused;
+ playBtn.textContent=p?'⏸':'▶';
+ musicIcon.classList.toggle('playing',p);
+ musicWaves.classList.toggle('paused',!p);
+}
+playBtn.onclick=()=>audio.paused?audio.play():audio.pause();
+audio.onplay=sync;
+audio.onpause=sync;
+document.addEventListener('click',function fp(){
+ audio.play().catch(()=>{});
+ document.removeEventListener('click',fp);
+},{once:true});
+sync();
+})();
+</script>
+
+</body>
+</html>
